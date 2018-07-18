@@ -37,7 +37,7 @@ public class CameraS : MonoBehaviour {
         Vector3 limitmap;
         limitmap.x = Mathf.Clamp(transform.position.x, -6, (float)6);
         limitmap.y = Mathf.Clamp(transform.position.y, (float)-6, (float)6);
-        limitmap.z = Mathf.Clamp(transform.position.z, -20, 0);
+        limitmap.z = Mathf.Clamp(transform.position.z, -20, -5);
         transform.position = limitmap;
 
 
