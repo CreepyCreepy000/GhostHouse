@@ -4,11 +4,12 @@ using UnityEngine;
 
 public class Buildtest : MonoBehaviour {
 
-    public GameObject G_Wall;
-    public GameObject G_Preview;
-    public GameObject G_Preview1;
-    GameObject test;
-    Vector3 posi;
+    public GameObject G_Wall; //벽
+    public GameObject G_Preview; //미리보기(설치가능)
+    public GameObject G_Preview1; //미리보기(설치불가)
+    GameObject test; //오브젝트 저장용
+    GameObject test2;
+    Vector3 posi; //오브젝트 위치 저장용
     public int PdCondition = 0; //상태를 나타내는 변수
 
     // Use this for initialization
@@ -54,6 +55,8 @@ public class Buildtest : MonoBehaviour {
         //}
     }
 
+    
+
     public void PreviewWall()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -67,37 +70,95 @@ public class Buildtest : MonoBehaviour {
             if (test == null && Input.GetKeyDown(KeyCode.M))
             {
                 test = Instantiate(G_Preview, posi, Quaternion.identity);
+                test2 = Instantiate(G_Preview1, posi, Quaternion.identity);
+                test2.SetActive(false);
             }
             if (test != null)
             {
                 test.transform.position = posi;
-                //if(hitinfo.collider.tag != "Map")
-                //{
-                //    test = Instantiate(G_Preview1, posi, Quaternion.identity);
-                //}
-                if (Input.GetMouseButtonDown(0))
+                test2.transform.position = posi;
+
+                RaycastHit hit = new RaycastHit();
+                if (Physics.Raycast(test.transform.position, test.transform.forward, out hit, 100f/*, 1 << LayerMask.NameToLayer("field")*/))
                 {
-                    //Debug.Log(hitinfo.collider.tag);
-                    //RaycastHit hit = new RaycastHit();
-                    //if (Physics.BoxCast(test.transform.position, test.transform.lossyScale, test.transform.forward, out hit, Quaternion.identity, 100f))
-                    //if (Physics.Raycast(test.transform.position, test.transform.forward, out hit, 100f, 1 << LayerMask.NameToLayer("field")))
+                    if (hit.collider.tag == "Map")
                     {
-                        //Debug.Log(hit.collider.tag);
-                        //GameObject target = hit.collider.gameObject;
-                        //Debug.Log(target.tag);
-                        //if (hitinfo.collider.tag == "Map")
+                        test.SetActive(true);
+                        //Debug.Log(hit.collider.tag);                        
+                        if (Input.GetMouseButtonDown(0))
                         {
-                            GameObject BuildWall = Instantiate(G_Wall, test.transform.position, Quaternion.identity);
+                            posi.z = 0.0001f; //약간의 꼼수. 배경의 z축좌표인 0.01f 보다 작은 값을 줌으로써 생성된 벽이 
+                            //카메라에서 보는 기준으로 배경보다 앞에 있게되므로 test에서 ray를 쐈을 때 배경보다 앞에있는
+                            //벽을 hit에 저장하게 된다.
+                            GameObject BuildWall = Instantiate(G_Wall, posi, Quaternion.identity);
                             Destroy(test);
+                            Destroy(test2);
                             test = null;
+                            test2 = null;
                         }
+                    }
+                    if (hit.collider.tag != "Map")
+                    {
+                        test2.SetActive(true);
+                        test.SetActive(false);
                     }
                 }
                 if (Input.GetMouseButtonDown(1))
                 {
                     Destroy(test);
+                    Destroy(test2);
                     test = null;
+                    test2 = null;
                 }
+                //if (Input.GetMouseButtonDown(0))
+                //{
+                //    posi.z = 0.0001f;
+                //    GameObject BuildWall = Instantiate(G_Wall, posi, Quaternion.identity);
+                //    Destroy(test);
+                //    test = null;
+                //}
+                //{
+                //    Collider[] hitCollider = Physics.OverlapBox(test.transform.position, test.transform.lossyScale / 4);
+                //    foreach (Collider hit in hitCollider)
+                //    {
+                //        //Debug.Log(hit.tag);
+                //        if (hit.tag != "Wall")
+                //        {
+
+                //        }
+                //    }
+                //    Debug.Log(hitinfo.collider.tag);
+
+                //    if (Physics.BoxCast(test.transform.position, test.transform.lossyScale, test.transform.forward, out hit, Quaternion.identity, 100f))
+                //        if (Physics.Raycast(test.transform.position, test.transform.forward, out hit, 100f, 1 << LayerMask.NameToLayer("field")))
+                //        {
+                //            Debug.Log(hit.collider.tag);
+                //            GameObject target = hit.collider.gameObject;
+                //            Debug.Log(target.tag);
+                //            if (hitinfo.collider.tag == "Map")
+                //            {
+                //                GameObject BuildWall = Instantiate(G_Wall, test.transform.position, Quaternion.identity);
+                //                Destroy(test);
+                //                test = null;
+                //            }
+                //        }
+                //    RaycastHit hit = new RaycastHit();
+                //    if (Physics.Raycast(test.transform.position, test.transform.forward, out hit, 100f/*, 1 << LayerMask.NameToLayer("field")*/))
+                //    {
+                //        if (Input.GetMouseButtonDown(0))
+                //        {
+                //            Debug.Log(hit.collider.tag);
+                //            if (hit.collider.tag == "Map")
+                //            {
+                //                posi.z = 0.0001f;
+                //                GameObject BuildWall = Instantiate(G_Wall, posi, Quaternion.identity);
+                //                Destroy(test);
+                //                test = null;
+                //            }
+                //        }
+                //    }
+                //}
+
             }
 
             
