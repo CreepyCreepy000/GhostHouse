@@ -5,12 +5,16 @@ using UnityEngine;
 public class Buildtest : MonoBehaviour {
 
     public GameObject G_Wall; //벽
-    public GameObject G_Preview; //미리보기(설치가능)
-    public GameObject G_Preview1; //미리보기(설치불가)
-    GameObject test; //오브젝트 저장용
-    GameObject test2;
+    public GameObject G_Road; //길
+    public GameObject G_Preview; //벽미리보기(설치가능)
+    public GameObject G_Preview1; //벽미리보기(설치불가)
+    //public GameObject G_PvRoad; //길미리보기(설치가능)
+    //public GameObject G_PvRoad1; //길미리보기(설치불가)
+    GameObject test; //오브젝트 설치 미리보기 저장용
+    GameObject test2; //설치불가 미리보기
     Vector3 posi; //오브젝트 위치 저장용
-    public int PdCondition = 0; //상태를 나타내는 변수
+    public int PdCondition = 0; //설치할 오브젝트 미리보기의 종류를 나타내는 변수
+    public int PdType = 0; //설치할 오브젝트의 종류를 나타내는 변수
 
     // Use this for initialization
     void Start () {
@@ -19,45 +23,55 @@ public class Buildtest : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        //PurchaseWall();
-        //Condi();
-        PreviewWall();
-	}
-
-    public void PurchaseWall()
-    {
-        //if (Input.GetMouseButtonDown(0))
-        //{
-        //    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        //    RaycastHit hitinfo = new RaycastHit();
-            
-        //    if (Physics.Raycast(ray, out hitinfo, 100.0f))
-        //    {
-        //        //Debug.Log(hitinfo.collider.tag);
-        //        if (hitinfo.collider.tag == "Map")
-        //        {
-        //            GameObject target = hitinfo.collider.gameObject;
-        //            if (Input.GetKeyDown(KeyCode.W))
-        //            {
-        //                Debug.Log("1");
-        //                GameObject BuildWall = Instantiate(G_Wall, target.transform.position, Quaternion.identity);
-        //            }
-        //        }
-        //    }
-        //}
+        Condi();
+        ProduceObject();
+        DeleteObject();
     }
 
     public void Condi()
     {
-        //if(Input.GetKeyDown(KeyCode.M))
-        //{
-        //    PdCondition = 1;
-        //}
+        
+        if (test == null)
+        {
+            if (Input.GetKeyDown(KeyCode.M))
+            {
+                PdCondition = 1;
+            }
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                PdCondition = 2;
+            }
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                PdCondition = -1;
+            }
+        }
+        
     }
 
-    
+    public void DeleteObject()
+    {
+        if (PdCondition == -1)
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hitinfo = new RaycastHit();
 
-    public void PreviewWall()
+            if (Physics.Raycast(ray, out hitinfo, 100.0f))
+            {
+                if (hitinfo.collider.tag != "Map")
+                {
+                    if (Input.GetMouseButtonDown(1))
+                    {
+                        //Debug.Log(hitinfo.collider.tag);
+                        Destroy(hitinfo.collider.gameObject);
+                        PdCondition = 0;
+                    }
+                }
+            }
+        }
+    }
+
+    public void ProduceObject()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hitinfo = new RaycastHit();
@@ -67,11 +81,26 @@ public class Buildtest : MonoBehaviour {
             posi.x = Mathf.Round(hitinfo.point.x);
             posi.y = Mathf.Round(hitinfo.point.y);
             posi.z = Mathf.Round(hitinfo.point.z);
-            if (test == null && Input.GetKeyDown(KeyCode.M))
+            if (test == null)
             {
-                test = Instantiate(G_Preview, posi, Quaternion.identity);
-                test2 = Instantiate(G_Preview1, posi, Quaternion.identity);
-                test2.SetActive(false);
+                if (PdCondition == 1)
+                {
+                    test = Instantiate(G_Preview, posi, Quaternion.identity);
+                    test2 = Instantiate(G_Preview1, posi, Quaternion.identity);
+                    PdType = 1;
+                }
+                if (PdCondition == 2)
+                {
+                    test = Instantiate(G_Preview, posi, Quaternion.identity); // G_PvRoad로 해야하나 이미지가 없으므로 보류
+                    test2 = Instantiate(G_Preview1, posi, Quaternion.identity); //G_PvRoad1로 해야함
+                    PdType = 2;
+                }
+                if (test2 != null)
+                {
+                    test2.SetActive(false);
+                    PdCondition = 0;
+                }
+                
             }
             if (test != null)
             {
@@ -90,11 +119,14 @@ public class Buildtest : MonoBehaviour {
                             posi.z = 0.0001f; //약간의 꼼수. 배경의 z축좌표인 0.01f 보다 작은 값을 줌으로써 생성된 벽이 
                             //카메라에서 보는 기준으로 배경보다 앞에 있게되므로 test에서 ray를 쐈을 때 배경보다 앞에있는
                             //벽을 hit에 저장하게 된다.
-                            GameObject BuildWall = Instantiate(G_Wall, posi, Quaternion.identity);
-                            Destroy(test);
-                            Destroy(test2);
-                            test = null;
-                            test2 = null;
+                            if (PdType == 1)
+                            {
+                                GameObject BuildWall = Instantiate(G_Wall, posi, Quaternion.identity);
+                            }
+                            if (PdType == 2)
+                            {
+                                GameObject BuildRoad = Instantiate(G_Road, posi, Quaternion.identity);
+                            }                        
                         }
                     }
                     if (hit.collider.tag != "Map")
@@ -105,6 +137,7 @@ public class Buildtest : MonoBehaviour {
                 }
                 if (Input.GetMouseButtonDown(1))
                 {
+                    PdType = 0;
                     Destroy(test);
                     Destroy(test2);
                     test = null;
