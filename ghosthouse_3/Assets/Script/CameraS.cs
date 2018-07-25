@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CameraS : MonoBehaviour {
     public float m_fSpeed = 5.0f;
-
+    public Camera camera;
     // Use this for initialization
     void Start()
     {
@@ -37,9 +37,17 @@ public class CameraS : MonoBehaviour {
         Vector3 limitmap;
         limitmap.x = Mathf.Clamp(transform.position.x, -6, (float)6);
         limitmap.y = Mathf.Clamp(transform.position.y, (float)-6, (float)6);
-        limitmap.z = Mathf.Clamp(transform.position.z, -20, -5);
+        limitmap.z = Mathf.Clamp(transform.position.z, -10, -10);
         transform.position = limitmap;
 
-
+        camera.orthographicSize -= Input.GetAxis("Mouse ScrollWheel");
+        if (camera.orthographicSize >= 7)
+        {
+            camera.orthographicSize = 7f;
+        }
+        if (camera.orthographicSize <= 3)
+        {
+            camera.orthographicSize = 3f;
+        }
     }
 }

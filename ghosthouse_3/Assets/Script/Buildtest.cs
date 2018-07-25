@@ -6,6 +6,10 @@ public class Buildtest : MonoBehaviour {
 
     public GameObject G_Wall; //벽
     public GameObject G_Road; //길
+    public GameObject G_Right; //오른쪽 화살표
+    public GameObject G_Left; //왼쪽 화살표
+    public GameObject G_Up; //위쪽 화살표
+    public GameObject G_Down; //아랫쪽 화살표
     public GameObject G_Preview; //벽미리보기(설치가능)
     public GameObject G_Preview1; //벽미리보기(설치불가)
     //public GameObject G_PvRoad; //길미리보기(설치가능)
@@ -40,6 +44,22 @@ public class Buildtest : MonoBehaviour {
             if (Input.GetKeyDown(KeyCode.R))
             {
                 PdCondition = 2;
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha1))
+            {
+                PdCondition = 3;
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha2))
+            {
+                PdCondition = 4;
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha3))
+            {
+                PdCondition = 5;
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha4))
+            {
+                PdCondition = 6;
             }
             if (Input.GetKeyDown(KeyCode.Space))
             {
@@ -95,6 +115,30 @@ public class Buildtest : MonoBehaviour {
                     test2 = Instantiate(G_Preview1, posi, Quaternion.identity); //G_PvRoad1로 해야함
                     PdType = 2;
                 }
+                if (PdCondition == 3)
+                {
+                    test = Instantiate(G_Preview, posi, Quaternion.identity);
+                    test2 = Instantiate(G_Preview1, posi, Quaternion.identity);
+                    PdType = 3;
+                }
+                if (PdCondition == 4)
+                {
+                    test = Instantiate(G_Preview, posi, Quaternion.identity);
+                    test2 = Instantiate(G_Preview1, posi, Quaternion.identity);
+                    PdType = 4;
+                }
+                if (PdCondition == 5)
+                {
+                    test = Instantiate(G_Preview, posi, Quaternion.identity);
+                    test2 = Instantiate(G_Preview1, posi, Quaternion.identity);
+                    PdType = 5;
+                }
+                if (PdCondition == 6)
+                {
+                    test = Instantiate(G_Preview, posi, Quaternion.identity);
+                    test2 = Instantiate(G_Preview1, posi, Quaternion.identity);
+                    PdType = 6;
+                }
                 if (test2 != null)
                 {
                     test2.SetActive(false);
@@ -121,12 +165,28 @@ public class Buildtest : MonoBehaviour {
                             //벽을 hit에 저장하게 된다.
                             if (PdType == 1)
                             {
-                                GameObject BuildWall = Instantiate(G_Wall, posi, Quaternion.identity);
+                                /*GameObject BuildWall = */Instantiate(G_Wall, posi, Quaternion.identity);
                             }
                             if (PdType == 2)
                             {
-                                GameObject BuildRoad = Instantiate(G_Road, posi, Quaternion.identity);
-                            }                        
+                                /*GameObject BuildRoad = */Instantiate(G_Road, posi, Quaternion.identity);
+                            }
+                            if (PdType == 3)
+                            {
+                                Instantiate(G_Right, posi, Quaternion.identity);
+                            }
+                            if (PdType == 4)
+                            {
+                                Instantiate(G_Left, posi, Quaternion.identity);
+                            }
+                            if (PdType == 5)
+                            {
+                                Instantiate(G_Up, posi, Quaternion.identity);
+                            }
+                            if (PdType == 6)
+                            {
+                                Instantiate(G_Down, posi, Quaternion.identity);
+                            }
                         }
                     }
                     if (hit.collider.tag != "Map")

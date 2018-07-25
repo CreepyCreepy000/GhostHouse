@@ -5,8 +5,10 @@ using UnityEngine;
 public class Ghosttest : MonoBehaviour {
 
     public GameObject G_Ghost1; //유령 오브젝트
-    Vector3 posi;
-    GameObject testghost;
+    public GameObject G_Ghost1Pv; //유령 미리보기
+    public GameObject G_Ghost1Area; //유령 구역
+    Vector3 posi; //좌표 저장용
+    GameObject testghost; //오브젝트 저장용
     public int ghostnumber = 0;
     public int GhostType = 0;
 
@@ -43,7 +45,7 @@ public class Ghosttest : MonoBehaviour {
             {
                 if (ghostnumber == 1)
                 {
-                    testghost = Instantiate(G_Ghost1, posi, Quaternion.identity);
+                    testghost = Instantiate(G_Ghost1Pv, posi, Quaternion.identity);
                     GhostType = 1;
                     ghostnumber = 0;
                 }
@@ -60,7 +62,8 @@ public class Ghosttest : MonoBehaviour {
                         {
                             if (GhostType == 1)
                             {
-                                GameObject LocateG = Instantiate(G_Ghost1, posi, Quaternion.identity);
+                                GameObject LocateG = Instantiate(G_Ghost1, posi, G_Ghost1.transform.rotation);
+                                //Instantiate(G_Ghost1Area, posi, Quaternion.identity);
                                 GhostType = 0;
                                 Destroy(testghost);
                             }
