@@ -20,7 +20,7 @@ public class GhostMove : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         //G_Way();
-        G_Move();
+        //G_Move();
         //MoveCheck();
         //test1();
         //Debug.Log(this.transform.rotation.y);
@@ -28,11 +28,12 @@ public class GhostMove : MonoBehaviour {
 
     public void G_Move()
     {
-        if (this.transform.position.x <= TargetPosition.x - 1)
+        this.transform.Translate(Vector3.left * Time.smoothDeltaTime);
+        if (this.transform.position.x <= TargetPosition.x - 2)
         {
             moveRotation = 1;
         }
-        if (this.transform.position.x >= TargetPosition.x + 1)
+        if (this.transform.position.x >= TargetPosition.x + 2)
         {
             moveRotation = 1;
         }
@@ -43,16 +44,15 @@ public class GhostMove : MonoBehaviour {
             moveRotation = 0;
         }
 
-        this.transform.Translate(Vector3.left * Time.smoothDeltaTime);
-        RaycastHit hitinfo = new RaycastHit();
-        if (Physics.Raycast(Checkpoint.transform.position, Checkpoint.transform.forward, out hitinfo, 100f))
-        {
-            if (hitinfo.collider.tag != "Road")
-            {
-                moveRotation = 1;
+        //RaycastHit hitinfo = new RaycastHit();
+        //if (Physics.Raycast(Checkpoint.transform.position, Checkpoint.transform.forward, out hitinfo, 100f))
+        //{
+        //    if (hitinfo.collider.tag != "Road")
+        //    {
+        //        moveRotation = 1;
 
-            }
-        }
+        //    }
+        //}
     }
 
     //public void G_Move1()
